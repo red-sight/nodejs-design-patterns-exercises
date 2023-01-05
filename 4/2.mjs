@@ -13,9 +13,9 @@ import fs from "fs";
 import Path from "path";
 
 const foundFiles = [];
-const processing = 0;
+let processing = 0;
 
-function listNestedFiles(dir, cb) {
+export function listNestedFiles(dir, cb) {
   listDir(dir, (err, files) => {
     if (err) return cb(err);
     return cb(null, files);
@@ -42,7 +42,7 @@ function listDir(dir, cb) {
   });
 }
 
-listNestedFiles("./", (err, list) => {
+/* listNestedFiles("./", (err, list) => {
   if (err) console.error("ERROR:", err);
   console.log("Data:", list, list.length);
-});
+}); */
