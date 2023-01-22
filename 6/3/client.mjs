@@ -4,11 +4,10 @@ import { basename } from "path";
 import { pipeline } from "node:stream/promises";
 
 const filePaths = [
-  // "package.json",
-  // "package-lock.json",
-  // "README.md",
-  "files/Pasquali, S. - Deploying Node.js - 2015.pdf"
-  // "files/london_crime_by_lsoa.csv"
+  "package.json",
+  "package-lock.json",
+  "README.md",
+  "files/london_crime_by_lsoa_small.csv"
 ];
 
 (function start() {
@@ -17,10 +16,13 @@ const filePaths = [
     for (const filePath of filePaths) {
       const filename = basename(filePath);
       const readStream = createReadStream(filePath);
+      let start = true;
       readStream
         .on("readable", () => {
-          let chunk;
-          while ((chunk = readStream.read()) !== null) {
+          console.log("readable event");
+          (function read() {
+            const chunk = readStream.read();
+            if (chunk === null) return null;
             const outBuff = Buffer.alloc(
               1 + filename.length + 4 + chunk.length
             );
@@ -29,8 +31,12 @@ const filePaths = [
             outBuff.writeUInt32BE(chunk.length, 1 + filename.length);
             chunk.copy(outBuff, 1 + filename.length + 4);
             console.log(`Sending packet, ${outBuff.length}`);
-            const canContinue = socket.write(outBuff);
-          }
+            socket.write(outBuff, (err) => {
+              console.log("Write cb");
+              if (err) return console.error(err);
+              read();
+            });
+          })();
         })
         .on("end", () => {
           if (--openChannels === 0) {
