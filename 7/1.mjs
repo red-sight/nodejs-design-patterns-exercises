@@ -38,9 +38,9 @@ function consoleColorFactory(color) {
   };
 
   if (!Object.keys(colorsMap).includes(color))
-    throw new Error("Color is not supported:", color);
+    throw new Error("Color is not supported");
 
-  return colorsMap[color];
+  return colorsMap[color]();
 }
 
 (function main() {
