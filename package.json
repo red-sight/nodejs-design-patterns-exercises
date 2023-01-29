@@ -11,6 +11,7 @@
   "dependencies": {
     "csv-generate": "^4.2.1",
     "csv-parse": "^5.3.3",
+    "nodemon": "^2.0.20",
     "parallel-stream": "^1.1.2",
     "pretty-ms": "^8.0.0",
     "stream-transform": "^3.2.1"
